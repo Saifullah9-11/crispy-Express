@@ -1,0 +1,140 @@
+[
+  {
+    "id": "bkt1",
+    "name": "Signature Bucket",
+    "category": "Chicken",
+    "price": 1299,
+    "currency": "PKR",
+    "description": "8 pieces of golden, secret-spiced chicken. Serves 3–4.",
+    "image": "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?auto=format&fit=crop&w=600&q=80",
+    "featured": true
+  },
+  {
+    "id": "bkt2",
+    "name": "Classic Bucket",
+    "category": "Chicken",
+    "price": 999,
+    "currency": "PKR",
+    "description": "6 pieces of crispy chicken with 1 large fries. Perfect for 2–3 people.",
+    "image": "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "bkt3",
+    "name": "Family Feast Bucket",
+    "category": "Chicken",
+    "price": 1999,
+    "currency": "PKR",
+    "description": "12 pieces of chicken, 2 large fries, 4 drinks. Serves 5–6.",
+    "image": "https://images.unsplash.com/photo-1513185158878-8d8c196b7f81?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "bz1",
+    "name": "Zinger Crunch Burger",
+    "category": "Burgers",
+    "price": 399,
+    "currency": "PKR",
+    "description": "Crispy fillet with spicy sauce, lettuce, pickles.",
+    "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
+    "featured": true
+  },
+  {
+    "id": "bz2",
+    "name": "Classic Chicken Burger",
+    "category": "Burgers",
+    "price": 349,
+    "currency": "PKR",
+    "description": "Grilled or fried chicken fillet with lettuce and mayo.",
+    "image": "https://images.unsplash.com/photo-1513185158878-8d8c196b7f81?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "bz3",
+    "name": "Cheese Chicken Burger",
+    "category": "Burgers",
+    "price": 399,
+    "currency": "PKR",
+    "description": "Crispy chicken fillet with melted cheese and mayo.",
+    "image": "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "fr1",
+    "name": "Large Fries",
+    "category": "Sides",
+    "price": 199,
+    "currency": "PKR",
+    "description": "Crispy golden fries, perfect side for any meal.",
+    "image": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "fr2",
+    "name": "Medium Fries",
+    "category": "Sides",
+    "price": 129,
+    "currency": "PKR",
+    "description": "Golden fries, medium size.",
+    "image": "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "sn1",
+    "name": "Chicken Popcorn",
+    "category": "Snacks",
+    "price": 249,
+    "currency": "PKR",
+    "description": "Small bite-sized crispy chicken pieces.",
+    "image": "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "sn2",
+    "name": "Hot Wings (6 pcs)",
+    "category": "Snacks",
+    "price": 349,
+    "currency": "PKR",
+    "description": "Spicy chicken wings, perfect appetizer.",
+    "image": "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "dr1",
+    "name": "Coke (500ml)",
+    "category": "Drinks",
+    "price": 99,
+    "currency": "PKR",
+    "description": "Chilled Coca-Cola bottle.",
+    "image": "https://images.unsplash.com/photo-1629203851022-39c6f254b896?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "dr2",
+    "name": "Sprite (500ml)",
+    "category": "Drinks",
+    "price": 99,
+    "currency": "PKR",
+    "description": "Chilled Sprite bottle.",
+    "image": "https://images.unsplash.com/photo-1625772290748-39126ddd9661?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "cb1",
+    "name": "Family Combo 1",
+    "category": "Combos",
+    "price": 1499,
+    "currency": "PKR",
+    "description": "8 pcs chicken + 2 large fries + 4 drinks.",
+    "image": "https://images.unsplash.com/photo-1513185158878-8d8c196b7f81?auto=format&fit=crop&w=600&q=80",
+    "featured": true
+  },
+  {
+    "id": "cb2",
+    "name": "Family Combo 2",
+    "category": "Combos",
+    "price": 1999,
+    "currency": "PKR",
+    "description": "12 pcs chicken + 2 large fries + 4 drinks.",
+    "image": "https://images.unsplash.com/photo-1513185158878-8d8c196b7f81?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "cb3",
+    "name": "Snack Combo",
+    "category": "Combos",
+    "price": 699,
+    "currency": "PKR",
+    "description": "Chicken popcorn + medium fries + 2 drinks.",
+    "image": "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=600&q=80"
+  }
+]

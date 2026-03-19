@@ -1,0 +1,34 @@
+# Crispy Express - User Interface Text (Urdu)
+
+[Home Page]
+Hero Headline: "گرم، کرسپی، ناقابلِ مزاحمت — تیز ترین ڈیلیوری۔"
+Subheadline: "تازہ مصالحہ دار چکن، ویلیو کومبوز، اور براہ راست آپ کے دروازے پر ڈیلیوری۔ ابھی آرڈر کریں اور 30 منٹ سے کم وقت میں گرم کھانا حاصل کریں۔"
+Primary CTA: "ابھی آرڈر کریں"
+Secondary CTA: "ڈیلز دیکھیں"
+
+[Menu Page]
+Title: "ہمارا مینو"
+Description: "ہمارے کرسپی فرائیڈ چکن، برگر اور فیملی کومبوز کا مکمل مینو دیکھیں۔"
+Categories:
+- سب (All)
+- چکن (Chicken)
+- برگر (Burgers)
+- کومبوز (Combos)
+- سائیڈز (Sides)
+- مشروبات (Drinks)
+
+[Product Details]
+Signature Bucket: "ہمارے سنہری، خفیہ مصالحہ دار چکن کے 8 ٹکڑے۔ 3-4 افراد کے لیے۔ دو بڑی سائیڈز کے ساتھ۔"
+Zinger Crunch Burger: "کرسپی فلیٹ، مسالیدار چٹنی، اچار — بھرپور کرنچ۔"
+Family Feast Combo: "شیئرنگ کے لیے بہترین: 12 ٹکڑے + 2 بڑی فرائز + 4 کولڈ ڈرنکس۔"
+
+[Checkout]
+Title: "چیک آؤٹ"
+Delivery Details: "ڈیلیوری کی تفصیلات"
+Payment Method: "ادائیگی کا طریقہ"
+Cash on Delivery: "کیش آن ڈیلیوری"
+Place Order: "آرڈر دیں"
+
+[Urgency]
+Promo: "صرف آج کے لیے: کسی بھی بالٹی کے ساتھ مفت فرائز — کوڈ استعمال کریں: HOTFRIES"
+Fast Delivery: "30 منٹ کی ڈیلیوری"
