@@ -46,10 +46,23 @@ export const Checkout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-20">
+    <div className="min-h-screen bg-white pt-24 pb-20 relative overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <img 
+          src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=1920&q=80" 
+          alt="Checkout Background" 
+          className="w-full h-full object-cover opacity-5"
+          referrerPolicy="no-referrer"
+        />
+        <div className="absolute inset-0 bg-white/95"></div>
+        <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
+          <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]"></div>
+        </div>
+      </div>
+
       <SEO title="Checkout" description="Complete your order and get hot chicken fast." />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           
           {/* Form */}

@@ -14,15 +14,24 @@ export const Deals = () => {
   }, []);
 
   return (
-    <div className="pt-24 pb-20">
+    <div className="pt-20 pb-20 bg-white">
       <SEO 
         title="Hot Deals & Combos" 
         description="Save big with our exclusive Crispy Express deals. Family combos, snack buckets, and more at unbeatable prices."
       />
 
-      <section className="bg-charcoal py-20 text-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-[120px] -mr-48 -mt-48"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent/10 rounded-full blur-[120px] -ml-48 -mb-48"></div>
+      <section className="relative py-24 text-white overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?auto=format&fit=crop&w=1920&q=80" 
+            alt="Deals Background" 
+            className="w-full h-full object-cover opacity-30"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-charcoal/80"></div>
+          <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-[120px] -mr-48 -mt-48"></div>
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent/10 rounded-full blur-[120px] -ml-48 -mb-48"></div>
+        </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div 

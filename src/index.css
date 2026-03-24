@@ -25,10 +25,11 @@
 
   body {
     @apply bg-paper text-charcoal font-sans antialiased;
+    background-color: #fdfcf8; /* Warmer cream tone */
     background-image: 
-      url("https://www.transparenttextures.com/patterns/paper-fibers.png"),
-      radial-gradient(#e5e7eb 0.5px, transparent 0.5px);
-    background-size: auto, 24px 24px;
+      url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+      repeating-linear-gradient(45deg, rgba(0,0,0,0.01) 0px, rgba(0,0,0,0.01) 2px, transparent 2px, transparent 4px);
+    background-attachment: fixed;
   }
   
   h1, h2, h3, h4, h5, h6 {
