@@ -12,46 +12,51 @@ export const Navbar = () => {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-white border-b border-black/5 shadow-sm">
+      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-black/5 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-8">
-              <Link to="/" className="flex items-center">
-                <span className="text-2xl font-display font-black text-primary italic">CRISPY</span>
-                <span className="text-2xl font-display font-black text-charcoal ml-1">EXPRESS</span>
+          <div className="flex justify-between h-20 items-center">
+            <div className="flex items-center gap-12">
+              <Link to="/" className="flex items-center group">
+                <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center mr-3 group-hover:rotate-12 transition-transform">
+                  <span className="text-white font-black text-xl italic">C</span>
+                </div>
+                <div className="flex flex-col leading-none">
+                  <span className="text-xl font-display font-black text-primary italic tracking-tighter">CRISPY</span>
+                  <span className="text-xl font-display font-black text-charcoal tracking-tighter">EXPRESS</span>
+                </div>
               </Link>
               
-              <div className="hidden md:flex items-center gap-6">
-                <Link to="/menu" className={`font-bold hover:text-primary transition-colors ${location.pathname === '/menu' ? 'text-primary' : ''}`}>Menu</Link>
-                <Link to="/deals" className={`font-bold hover:text-primary transition-colors ${location.pathname === '/deals' ? 'text-primary' : ''}`}>Deals</Link>
-                <Link to="/locations" className={`font-bold hover:text-primary transition-colors ${location.pathname === '/locations' ? 'text-primary' : ''}`}>Locations</Link>
+              <div className="hidden md:flex items-center gap-8">
+                <Link to="/menu" className={`font-black uppercase tracking-widest text-xs hover:text-primary transition-colors ${location.pathname === '/menu' ? 'text-primary' : 'text-gray-500'}`}>Menu</Link>
+                <Link to="/deals" className={`font-black uppercase tracking-widest text-xs hover:text-primary transition-colors ${location.pathname === '/deals' ? 'text-primary' : 'text-gray-500'}`}>Deals</Link>
+                <Link to="/locations" className={`font-black uppercase tracking-widest text-xs hover:text-primary transition-colors ${location.pathname === '/locations' ? 'text-primary' : 'text-gray-500'}`}>Locations</Link>
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
-              <Link to="/locations" className="hidden sm:flex items-center gap-1 text-sm font-medium text-gray-500 hover:text-primary">
-                <MapPin size={16} />
+            <div className="flex items-center gap-6">
+              <Link to="/locations" className="hidden lg:flex items-center gap-2 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-primary transition-colors">
+                <MapPin size={14} />
                 <span>Find Store</span>
               </Link>
               
               <button 
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-2 text-charcoal hover:text-primary transition-colors"
+                className="relative p-3 bg-gray-50 rounded-2xl text-charcoal hover:text-primary transition-all hover:scale-110"
               >
-                <ShoppingBag size={24} />
+                <ShoppingBag size={22} />
                 {itemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-accent text-charcoal text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">
+                  <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-black w-6 h-6 flex items-center justify-center rounded-full border-4 border-white shadow-lg">
                     {itemCount}
                   </span>
                 )}
               </button>
 
-              <Link to="/menu" className="hidden md:block btn-primary py-2 text-sm">
+              <Link to="/menu" className="hidden md:block bg-primary hover:bg-red-700 text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-lg shadow-primary/20">
                 Order Now
               </Link>
 
               <button 
-                className="md:hidden p-2"
+                className="md:hidden p-2 bg-gray-50 rounded-xl"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
