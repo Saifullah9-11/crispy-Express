@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { SEO } from '../components/SEO';
 import { ProductCard } from '../components/ProductCard';
 import { motion } from 'framer-motion';
@@ -6,6 +7,7 @@ import { motion } from 'framer-motion';
 export const Menu = () => {
   const [menu, setMenu] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All');
+  const location = useLocation();
   const categories = ['All', 'Chicken', 'Burgers', 'Combos', 'Sides', 'Snacks', 'Drinks'];
 
   useEffect(() => {
@@ -13,6 +15,16 @@ export const Menu = () => {
       .then(res => res.json())
       .then(data => setMenu(data));
   }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const cat = params.get('category');
+    if (cat && categories.includes(cat)) {
+      setActiveCategory(cat);
+    } else {
+      setActiveCategory('All');
+    }
+  }, [location.search]);
 
   const filteredMenu = activeCategory === 'All' 
     ? menu 
