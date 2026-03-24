@@ -80,7 +80,7 @@
     "price": 249,
     "currency": "PKR",
     "description": "Small bite-sized crispy chicken pieces.",
-    "image": "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=600&q=80"
+    "image": "https://images.unsplash.com/photo-1614398751058-eb2e0bf63e53?auto=format&fit=crop&w=600&q=80"
   },
   {
     "id": "sn2",
@@ -89,7 +89,7 @@
     "price": 349,
     "currency": "PKR",
     "description": "Spicy chicken wings, perfect appetizer.",
-    "image": "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?auto=format&fit=crop&w=600&q=80"
+    "image": "https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&w=600&q=80"
   },
   {
     "id": "dr1",
@@ -98,7 +98,7 @@
     "price": 99,
     "currency": "PKR",
     "description": "Chilled Coca-Cola bottle.",
-    "image": "https://images.unsplash.com/photo-1629203851022-39c6f254b896?auto=format&fit=crop&w=600&q=80"
+    "image": "https://images.unsplash.com/photo-1554866585-cd94860890b7?auto=format&fit=crop&w=600&q=80"
   },
   {
     "id": "dr2",
@@ -126,7 +126,7 @@
     "price": 1999,
     "currency": "PKR",
     "description": "12 pcs chicken + 2 large fries + 4 drinks.",
-    "image": "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=600&q=80"
+    "image": "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?auto=format&fit=crop&w=600&q=80"
   },
   {
     "id": "cb3",
@@ -135,6 +135,6 @@
     "price": 699,
     "currency": "PKR",
     "description": "Chicken popcorn + medium fries + 2 drinks.",
-    "image": "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=600&q=80"
+    "image": "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&w=600&q=80"
   }
 ]
