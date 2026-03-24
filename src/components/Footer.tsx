@@ -8,12 +8,17 @@ export const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           <div className="space-y-6">
-            <Link to="/" className="flex items-center">
-              <span className="text-2xl font-display font-black text-primary italic">CRISPY</span>
-              <span className="text-2xl font-display font-black text-white ml-1">EXPRESS</span>
+            <Link to="/" className="flex items-center group">
+              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center mr-3 group-hover:rotate-12 transition-transform">
+                <span className="text-white font-black text-xl italic">C</span>
+              </div>
+              <div className="flex flex-col leading-none">
+                <span className="text-xl font-display font-black text-primary italic tracking-tighter">CRISPY</span>
+                <span className="text-xl font-display font-black text-white tracking-tighter">EXPRESS</span>
+              </div>
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed">
-              Serving the world's best fried chicken since 2024. Hot, crispy, and delivered straight to your door in under 30 minutes.
+              Serving the world's best fried chicken since 2024. Hot, crispy, and delivered straight to your door at express speeds.
             </p>
             <div className="flex gap-4">
               <a href="#" className="p-2 bg-white/5 rounded-full hover:bg-primary transition-colors"><Facebook size={20} /></a>
