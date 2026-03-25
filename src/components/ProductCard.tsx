@@ -20,10 +20,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   return (
     <motion.div 
-      whileHover={{ y: -10 }}
+      whileHover={{ y: -15 }}
       className="card flex flex-col h-full group"
     >
-      <div className="relative aspect-[4/3] overflow-hidden m-4 rounded-[2rem]">
+      <div className="relative aspect-square overflow-hidden">
         <img 
           src={product.image} 
           alt={product.name} 
@@ -33,38 +33,33 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         
         {product.featured && (
-          <div className="absolute top-4 left-4 bg-primary text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-xl">
-            <Flame size={12} />
+          <div className="absolute top-4 left-4 bg-primary text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-lg flex items-center gap-2 shadow-2xl">
+            <Flame size={14} fill="currentColor" />
             <span>Best Seller</span>
           </div>
         )}
       </div>
       
-      <div className="px-6 pb-8 flex-1 flex flex-col">
-        <div className="flex justify-between items-start mb-3">
-          <h3 className="font-display font-black text-xl leading-tight uppercase tracking-tight">{product.name}</h3>
-          <div className="flex flex-col items-end">
-            <span className="font-black text-primary text-lg leading-none">Rs. {product.price}</span>
-            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">PKR</span>
-          </div>
+      <div className="p-8 flex-1 flex flex-col">
+        <div className="flex justify-between items-start mb-4">
+          <h3 className="font-display font-black text-2xl leading-tight uppercase tracking-tighter italic">{product.name}</h3>
         </div>
         
-        <p className="text-gray-500 text-sm line-clamp-2 mb-6 flex-1 leading-relaxed">
+        <p className="text-gray-500 text-sm line-clamp-2 mb-8 flex-1 leading-relaxed font-medium">
           {product.description}
         </p>
         
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center justify-between gap-4 mt-auto">
+          <div className="flex flex-col">
+            <span className="text-primary text-3xl font-black italic leading-none">Rs. {product.price}</span>
+            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Inc. Taxes</span>
+          </div>
           <button 
             onClick={() => addToCart(product)}
-            className="flex-1 bg-charcoal hover:bg-primary text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 active:scale-95 shadow-lg shadow-black/10"
+            className="bg-charcoal hover:bg-primary text-white w-14 h-14 rounded-2xl flex items-center justify-center transition-all active:scale-90 shadow-xl"
           >
-            <Plus size={18} />
-            <span>Add to Cart</span>
+            <Plus size={28} />
           </button>
-          
-          <div className="p-4 bg-gray-50 rounded-2xl text-accent">
-            <Star size={18} fill="currentColor" />
-          </div>
         </div>
       </div>
     </motion.div>

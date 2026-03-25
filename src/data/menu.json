@@ -2,7 +2,7 @@
   {
     "id": "bkt1",
     "name": "Signature Bucket",
-    "category": "Chicken",
+    "category": "Fried Chicken",
     "price": 1299,
     "currency": "PKR",
     "description": "8 pieces of golden, secret-spiced chicken. Serves 3–4.",
@@ -12,7 +12,7 @@
   {
     "id": "bkt2",
     "name": "Classic Bucket",
-    "category": "Chicken",
+    "category": "Fried Chicken",
     "price": 999,
     "currency": "PKR",
     "description": "6 pieces of crispy chicken with 1 large fries. Perfect for 2–3 people.",
@@ -21,7 +21,7 @@
   {
     "id": "bkt3",
     "name": "Family Feast Bucket",
-    "category": "Chicken",
+    "category": "Fried Chicken",
     "price": 1999,
     "currency": "PKR",
     "description": "12 pieces of chicken, 2 large fries, 4 drinks. Serves 5–6.",
@@ -58,7 +58,7 @@
   {
     "id": "fr1",
     "name": "Large Fries",
-    "category": "Sides",
+    "category": "Fries",
     "price": 199,
     "currency": "PKR",
     "description": "Crispy golden fries, perfect side for any meal.",
@@ -67,7 +67,7 @@
   {
     "id": "fr2",
     "name": "Medium Fries",
-    "category": "Sides",
+    "category": "Fries",
     "price": 129,
     "currency": "PKR",
     "description": "Golden fries, medium size.",
@@ -112,7 +112,7 @@
   {
     "id": "cb1",
     "name": "Family Combo 1",
-    "category": "Combos",
+    "category": "Deals",
     "price": 1499,
     "currency": "PKR",
     "description": "8 pcs chicken + 2 large fries + 4 drinks.",
@@ -122,7 +122,7 @@
   {
     "id": "cb2",
     "name": "Family Combo 2",
-    "category": "Combos",
+    "category": "Deals",
     "price": 1999,
     "currency": "PKR",
     "description": "12 pcs chicken + 2 large fries + 4 drinks.",
@@ -131,7 +131,7 @@
   {
     "id": "cb3",
     "name": "Snack Combo",
-    "category": "Combos",
+    "category": "Deals",
     "price": 699,
     "currency": "PKR",
     "description": "Chicken popcorn + medium fries + 2 drinks.",

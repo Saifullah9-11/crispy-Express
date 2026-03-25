@@ -1,46 +1,53 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { SEO } from '../components/SEO';
-import { CreditCard, Truck, MapPin, Clock, CheckCircle, ArrowRight, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { SEO } from '../components/SEO';
+import { Trash2, Plus, Minus, ArrowRight, ShoppingBag, CreditCard, Truck, MapPin } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-export const Checkout = () => {
-  const { cart, total, clearCart } = useCart();
+export const Checkout: React.FC = () => {
+  const { cart, total, updateQuantity, removeFromCart, clearCart } = useCart();
   const [step, setStep] = useState(1);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [isOrdered, setIsOrdered] = useState(false);
 
-  const handleCheckout = async (e: React.FormEvent) => {
+  const handleOrder = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsProcessing(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setIsProcessing(false);
-    setIsSuccess(true);
+    setIsOrdered(true);
     clearCart();
   };
 
-  if (isSuccess) {
+  if (isOrdered) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <div className="min-h-screen bg-paper flex items-center justify-center pt-20 pb-20 px-4">
+        <SEO title="Order Success" />
         <motion.div 
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="max-w-md w-full bg-white p-8 rounded-3xl shadow-xl text-center"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-md w-full bg-white p-12 rounded-[3rem] shadow-2xl text-center border border-gray-100"
         >
-          <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle size={48} />
+          <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8">
+            <Truck className="text-primary" size={48} />
           </div>
-          <h1 className="text-3xl font-display font-black mb-4">Order Confirmed!</h1>
-          <p className="text-gray-500 mb-8">Your hot and crispy chicken is being prepared. Estimated delivery: 25-35 minutes.</p>
-          <div className="bg-gray-50 p-4 rounded-xl mb-8 text-left">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Order Number</p>
-            <p className="font-mono font-bold text-lg">#CE-982341</p>
-          </div>
-          <a href="/" className="btn-primary w-full block">Back to Home</a>
+          <h1 className="text-4xl font-display font-black italic mb-4 uppercase tracking-tighter">ORDER <span className="text-primary">PLACED!</span></h1>
+          <p className="text-gray-500 mb-10 leading-relaxed">Your hot and crispy meal is being prepared and will be at your doorstep in 30 minutes. Get ready for the crunch!</p>
+          <Link to="/" className="btn-primary w-full">Back to Home <ArrowRight size={20} /></Link>
         </motion.div>
+      </div>
+    );
+  }
+
+  if (cart.length === 0) {
+    return (
+      <div className="min-h-screen bg-paper flex items-center justify-center pt-20 pb-20 px-4">
+        <SEO title="Empty Cart" />
+        <div className="max-w-md w-full text-center">
+          <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-8">
+            <ShoppingBag className="text-gray-300" size={48} />
+          </div>
+          <h1 className="text-4xl font-display font-black italic mb-4 uppercase tracking-tighter">CART IS <span className="text-primary">EMPTY</span></h1>
+          <p className="text-gray-400 mb-10">Looks like you haven't added any crispy goodness yet. What are you waiting for?</p>
+          <Link to="/menu" className="btn-primary w-full inline-flex">Explore Menu <ArrowRight size={20} /></Link>
+        </div>
       </div>
     );
   }
@@ -66,102 +73,124 @@ export const Checkout = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           
           {/* Form */}
-          <div className="lg:col-span-2 space-y-8">
-            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-black/5">
-              <div className="flex items-center gap-4 mb-8">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${step >= 1 ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'}`}>1</div>
-                <h2 className="text-2xl font-display font-bold">Delivery Details</h2>
-              </div>
-              
-              <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-bold mb-2">Full Name</label>
-                  <input type="text" className="w-full border rounded-xl px-4 py-3 focus:border-primary focus:outline-none" placeholder="John Doe" required />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold mb-2">Phone Number</label>
-                  <input type="tel" className="w-full border rounded-xl px-4 py-3 focus:border-primary focus:outline-none" placeholder="+92 300 1234567" required />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold mb-2">Email</label>
-                  <input type="email" className="w-full border rounded-xl px-4 py-3 focus:border-primary focus:outline-none" placeholder="john@example.com" required />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-bold mb-2">Delivery Address</label>
-                  <textarea className="w-full border rounded-xl px-4 py-3 focus:border-primary focus:outline-none" rows={3} placeholder="Street, Area, City" required></textarea>
-                </div>
-              </form>
+          <div className="lg:col-span-2">
+            <div className="flex items-center gap-6 mb-12">
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-xl transition-all ${step >= 1 ? 'bg-primary text-white shadow-xl shadow-primary/20' : 'bg-gray-100 text-gray-400'}`}>1</div>
+              <div className="h-px bg-gray-100 flex-1"></div>
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-xl transition-all ${step >= 2 ? 'bg-primary text-white shadow-xl shadow-primary/20' : 'bg-gray-100 text-gray-400'}`}>2</div>
+              <div className="h-px bg-gray-100 flex-1"></div>
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-xl transition-all ${step >= 3 ? 'bg-primary text-white shadow-xl shadow-primary/20' : 'bg-gray-100 text-gray-400'}`}>3</div>
             </div>
 
-            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-black/5">
-              <div className="flex items-center gap-4 mb-8">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${step >= 2 ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'}`}>2</div>
-                <h2 className="text-2xl font-display font-bold">Payment Method</h2>
-              </div>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <button className="border-2 border-primary bg-red-50 p-4 rounded-2xl flex items-center gap-4 text-left">
-                  <div className="p-2 bg-primary text-white rounded-lg"><Truck size={24} /></div>
-                  <div>
-                    <p className="font-bold">Cash on Delivery</p>
-                    <p className="text-xs text-gray-500">Pay when you receive</p>
+            <form onSubmit={handleOrder} className="space-y-12">
+              {step === 1 && (
+                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8">
+                  <div className="flex items-center gap-4 mb-8">
+                    <MapPin className="text-primary" size={32} />
+                    <h2 className="text-3xl font-display font-black italic uppercase">DELIVERY <span className="text-primary">DETAILS</span></h2>
                   </div>
-                </button>
-                <button className="border-2 border-gray-100 p-4 rounded-2xl flex items-center gap-4 text-left opacity-50 cursor-not-allowed">
-                  <div className="p-2 bg-gray-100 text-gray-400 rounded-lg"><CreditCard size={24} /></div>
-                  <div>
-                    <p className="font-bold">Credit/Debit Card</p>
-                    <p className="text-xs text-gray-500">Coming soon</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <input type="text" placeholder="Full Name" required className="input-field" />
+                    <input type="tel" placeholder="Phone Number" required className="input-field" />
+                    <div className="md:col-span-2">
+                      <textarea placeholder="Delivery Address" required rows={4} className="input-field resize-none"></textarea>
+                    </div>
                   </div>
-                </button>
-              </div>
-            </div>
+                  <button type="button" onClick={() => setStep(2)} className="btn-primary w-full md:w-auto">Next Step <ArrowRight size={20} /></button>
+                </motion.div>
+              )}
+
+              {step === 2 && (
+                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8">
+                  <div className="flex items-center gap-4 mb-8">
+                    <CreditCard className="text-primary" size={32} />
+                    <h2 className="text-3xl font-display font-black italic uppercase">PAYMENT <span className="text-primary">METHOD</span></h2>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <button type="button" className="p-8 rounded-[2rem] border-2 border-primary bg-primary/5 flex flex-col items-center gap-4 transition-all">
+                      <Truck className="text-primary" size={32} />
+                      <span className="font-black uppercase tracking-widest text-xs">Cash on Delivery</span>
+                    </button>
+                    <button type="button" className="p-8 rounded-[2rem] border-2 border-gray-100 bg-white flex flex-col items-center gap-4 opacity-50 cursor-not-allowed">
+                      <CreditCard className="text-gray-300" size={32} />
+                      <span className="font-black uppercase tracking-widest text-xs text-gray-300">Online Payment (Coming Soon)</span>
+                    </button>
+                  </div>
+                  <div className="flex gap-4">
+                    <button type="button" onClick={() => setStep(1)} className="btn-secondary flex-1 md:flex-none">Back</button>
+                    <button type="button" onClick={() => setStep(3)} className="btn-primary flex-1 md:flex-none">Review Order <ArrowRight size={20} /></button>
+                  </div>
+                </motion.div>
+              )}
+
+              {step === 3 && (
+                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8">
+                  <div className="flex items-center gap-4 mb-8">
+                    <ShoppingBag className="text-primary" size={32} />
+                    <h2 className="text-3xl font-display font-black italic uppercase">FINAL <span className="text-primary">REVIEW</span></h2>
+                  </div>
+                  <div className="bg-gray-50 p-8 rounded-[2rem] border border-gray-100 space-y-4">
+                    <div className="flex justify-between text-sm font-bold uppercase tracking-widest">
+                      <span className="text-gray-400">Subtotal</span>
+                      <span>Rs. {total}</span>
+                    </div>
+                    <div className="flex justify-between text-sm font-bold uppercase tracking-widest">
+                      <span className="text-gray-400">Delivery Fee</span>
+                      <span className="text-primary">FREE</span>
+                    </div>
+                    <div className="h-px bg-gray-200 my-4"></div>
+                    <div className="flex justify-between text-2xl font-display font-black italic uppercase">
+                      <span>Total</span>
+                      <span className="text-primary">Rs. {total}</span>
+                    </div>
+                  </div>
+                  <div className="flex gap-4">
+                    <button type="button" onClick={() => setStep(2)} className="btn-secondary flex-1 md:flex-none">Back</button>
+                    <button type="submit" className="btn-primary flex-1 md:flex-none">Place Order <ArrowRight size={20} /></button>
+                  </div>
+                </motion.div>
+              )}
+            </form>
           </div>
 
-          {/* Order Summary */}
+          {/* Cart Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white p-6 rounded-3xl shadow-sm border border-black/5 sticky top-24">
-              <h2 className="text-xl font-display font-bold mb-6">Order Summary</h2>
-              
-              <div className="space-y-4 mb-6">
-                {cart.map(item => (
-                  <div key={item.id} className="flex justify-between text-sm">
-                    <span className="text-gray-600">{item.quantity}x {item.name}</span>
-                    <span className="font-bold">Rs. {item.price * item.quantity}</span>
-                  </div>
-                ))}
+            <div className="bg-charcoal rounded-[3rem] p-8 text-white sticky top-32 shadow-2xl">
+              <h3 className="text-2xl font-display font-black italic uppercase mb-8 tracking-tight">YOUR <span className="text-primary">CART</span></h3>
+              <div className="space-y-6 max-h-[400px] overflow-y-auto pr-2 no-scrollbar mb-8">
+                <AnimatePresence mode="popLayout">
+                  {cart.map((item) => (
+                    <motion.div 
+                      key={item.id}
+                      layout
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="flex gap-4 items-center"
+                    >
+                      <div className="w-16 h-16 rounded-2xl overflow-hidden shrink-0 border border-white/10">
+                        <img src={item.image} alt={item.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-black uppercase tracking-tight text-xs truncate mb-1">{item.name}</h4>
+                        <p className="text-primary font-black text-sm">Rs. {item.price}</p>
+                      </div>
+                      <div className="flex items-center gap-3 bg-white/5 rounded-xl px-2 py-1">
+                        <button onClick={() => updateQuantity(item.id, -1)} className="text-white hover:text-primary transition-colors"><Minus size={14} /></button>
+                        <span className="text-xs font-black w-4 text-center">{item.quantity}</span>
+                        <button onClick={() => updateQuantity(item.id, 1)} className="text-white hover:text-primary transition-colors"><Plus size={14} /></button>
+                      </div>
+                      <button onClick={() => removeFromCart(item.id)} className="text-gray-500 hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
-
-              <div className="space-y-3 pt-6 border-t border-dashed">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Subtotal</span>
-                  <span>Rs. {total}</span>
+              <div className="border-t border-white/10 pt-8 mt-8">
+                <div className="flex justify-between items-center mb-6">
+                  <span className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Total Amount</span>
+                  <span className="text-3xl font-display font-black italic text-primary">Rs. {total}</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Delivery Fee</span>
-                  <span className="text-green-600 font-bold">FREE</span>
-                </div>
-                <div className="flex justify-between text-xl font-black pt-3">
-                  <span>Total</span>
-                  <span className="text-primary">Rs. {total}</span>
-                </div>
-              </div>
-
-              <button 
-                onClick={handleCheckout}
-                disabled={isProcessing || cart.length === 0}
-                className="w-full btn-primary mt-8 py-4 text-lg flex items-center justify-center gap-3"
-              >
-                {isProcessing ? (
-                  <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                ) : (
-                  <>Place Order <ArrowRight size={20} /></>
-                )}
-              </button>
-              
-              <div className="mt-6 flex items-center justify-center gap-2 text-[10px] text-gray-400 font-bold uppercase tracking-widest">
-                <ShieldCheck size={14} />
-                <span>Secure Checkout</span>
+                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest text-center">Taxes and delivery included</p>
               </div>
             </div>
           </div>
