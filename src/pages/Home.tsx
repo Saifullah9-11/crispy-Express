@@ -179,7 +179,7 @@ export const Home: React.FC = () => {
       <section className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-display font-black italic mb-4 uppercase tracking-tighter">WHAT THE <span className="text-primary">SQUAD</span> SAYS</h2>
+            <h2 className="text-4xl md:text-6xl font-display font-black italic mb-4">What They <span className="text-primary">Say</span></h2>
             <div className="w-24 h-2 bg-primary mx-auto"></div>
           </div>
 
