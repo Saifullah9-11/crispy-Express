@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, Plus, Flame } from 'lucide-react';
+import { Star, Plus, Flame, MessageCircle } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { motion } from 'framer-motion';
 
@@ -17,6 +17,9 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
+  const phoneNumber = "923001234567"; // Replace with real number
+  const message = encodeURIComponent(`Hello, I want to order ${product.name}`);
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
 
   return (
     <motion.div 
@@ -49,17 +52,30 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {product.description}
         </p>
         
-        <div className="flex items-center justify-between gap-4 mt-auto">
-          <div className="flex flex-col">
-            <span className="text-primary text-3xl font-black italic leading-none">Rs. {product.price}</span>
-            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Inc. Taxes</span>
+        <div className="flex flex-col gap-4 mt-auto">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col">
+              <span className="text-primary text-3xl font-black italic leading-none">Rs. {product.price}</span>
+              <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Inc. Taxes</span>
+            </div>
+            <button 
+              onClick={() => addToCart(product)}
+              className="bg-charcoal hover:bg-primary text-white w-14 h-14 rounded-2xl flex items-center justify-center transition-all active:scale-90 shadow-xl"
+              title="Add to Cart"
+            >
+              <Plus size={28} />
+            </button>
           </div>
-          <button 
-            onClick={() => addToCart(product)}
-            className="bg-charcoal hover:bg-primary text-white w-14 h-14 rounded-2xl flex items-center justify-center transition-all active:scale-90 shadow-xl"
+          
+          <a 
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white py-3 rounded-xl flex items-center justify-center gap-2 font-black uppercase tracking-widest text-xs transition-all shadow-lg shadow-[#25D366]/20"
           >
-            <Plus size={28} />
-          </button>
+            <MessageCircle size={18} fill="currentColor" />
+            Order on WhatsApp
+          </a>
         </div>
       </div>
     </motion.div>
