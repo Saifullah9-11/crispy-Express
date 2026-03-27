@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Menu, X, Flame, LogIn, LogOut, User as UserIcon } from 'lucide-react';
+import { ShoppingCart, Menu, X, Flame, LogIn, LogOut, User as UserIcon, Lock } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -11,7 +11,7 @@ export const Navbar: React.FC = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { itemCount } = useCart();
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const location = useLocation();
 
   useEffect(() => {
@@ -52,6 +52,11 @@ export const Navbar: React.FC = () => {
                   {link.name}
                 </Link>
               ))}
+              {isAdmin && (
+                <Link to="/admin" className="text-sm font-black uppercase tracking-widest text-primary hover:text-primary/80 transition-colors flex items-center gap-2">
+                  <Lock size={14} /> Admin
+                </Link>
+              )}
               <Link to="/checkout" className="relative group">
                 <div className="bg-primary p-3 rounded-full hover:scale-110 transition-transform shadow-lg shadow-primary/20">
                   <ShoppingCart className="text-white" size={20} />

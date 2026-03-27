@@ -1,6 +1,34 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User, signInAnonymously } from 'firebase/auth';
-import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs, onSnapshot, doc, getDocFromServer, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { 
+  getAuth, 
+  GoogleAuthProvider, 
+  signInWithPopup, 
+  signOut, 
+  onAuthStateChanged, 
+  User, 
+  signInAnonymously,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile
+} from 'firebase/auth';
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  serverTimestamp, 
+  query, 
+  where, 
+  getDocs, 
+  onSnapshot, 
+  doc, 
+  getDocFromServer, 
+  getDoc, 
+  setDoc, 
+  updateDoc,
+  orderBy,
+  limit,
+  Timestamp
+} from 'firebase/firestore';
 
 // Import the Firebase configuration from the auto-generated file
 import firebaseConfig from '../firebase-applet-config.json';
@@ -14,7 +42,10 @@ export const googleProvider = new GoogleAuthProvider();
 // Auth functions
 export const loginWithGoogle = () => signInWithPopup(auth, googleProvider);
 export const loginAnonymously = () => signInAnonymously(auth);
+export const signupWithEmail = (email: string, pass: string) => createUserWithEmailAndPassword(auth, email, pass);
+export const loginWithEmail = (email: string, pass: string) => signInWithEmailAndPassword(auth, email, pass);
 export const logout = () => signOut(auth);
+export { updateProfile };
 
 // Error Handling Spec for Firestore Operations
 export enum OperationType {
@@ -81,5 +112,21 @@ async function testConnection() {
 }
 testConnection();
 
-export { serverTimestamp, collection, addDoc, query, where, getDocs, onSnapshot, doc, getDoc, onAuthStateChanged, setDoc, updateDoc };
+export { 
+  serverTimestamp, 
+  collection, 
+  addDoc, 
+  query, 
+  where, 
+  getDocs, 
+  onSnapshot, 
+  doc, 
+  getDoc, 
+  onAuthStateChanged, 
+  setDoc, 
+  updateDoc,
+  orderBy,
+  limit,
+  Timestamp
+};
 export type { User };

@@ -9,6 +9,7 @@ import { Home } from './pages/Home';
 import { Menu } from './pages/Menu';
 import { Deals } from './pages/Deals';
 import { Checkout } from './pages/Checkout';
+import AdminDashboard from './pages/AdminDashboard';
 
 const App: React.FC = () => {
   return (
@@ -24,6 +25,7 @@ const App: React.FC = () => {
                 <Route path="/menu" element={<Menu />} />
                 <Route path="/deals" element={<Deals />} />
                 <Route path="/checkout" element={<Checkout />} />
+                <Route path="/admin" element={<AdminDashboard />} />
               </Routes>
             </main>
             <Footer />

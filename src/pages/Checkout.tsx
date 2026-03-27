@@ -51,9 +51,28 @@ export const Checkout: React.FC = () => {
         }
       };
 
-      await addDoc(collection(db, 'orders'), orderData);
+      const docRef = await addDoc(collection(db, 'orders'), orderData);
+      
+      // Prepare WhatsApp message
+      const itemsList = cart.map(item => `• ${item.name} x${item.quantity} (Rs. ${item.price * item.quantity})`).join('\n');
+      const whatsappMsg = `*CRISPY EXPRESS - NEW ORDER*\n\n` +
+        `*Order ID:* ${docRef.id}\n` +
+        `*Customer:* ${formData.name}\n` +
+        `*Phone:* ${formData.phone}\n` +
+        `*Address:* ${formData.address}\n\n` +
+        `*Items:*\n${itemsList}\n\n` +
+        `*Total Amount:* Rs. ${total}\n` +
+        `*Payment:* Cash on Delivery\n\n` +
+        `Please confirm my order. Thank you!`;
+
+      const encodedMsg = encodeURIComponent(whatsappMsg);
+      const whatsappUrl = `https://wa.me/923001234567?text=${encodedMsg}`;
+
       setIsOrdered(true);
       clearCart();
+      
+      // Open WhatsApp in a new tab
+      window.open(whatsappUrl, '_blank');
     } catch (err) {
       console.error('Order failed:', err);
       try {

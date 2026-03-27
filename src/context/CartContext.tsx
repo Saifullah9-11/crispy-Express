@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from './AuthContext';
+import { db, doc, getDoc, setDoc } from '../firebase';
 
 interface CartItem {
   id: string;
@@ -21,14 +23,53 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user } = useAuth();
   const [cart, setCart] = useState<CartItem[]>(() => {
     const saved = localStorage.getItem('crispy_cart');
     return saved ? JSON.parse(saved) : [];
   });
 
+  // Sync cart with Firestore when user changes
+  useEffect(() => {
+    const syncCart = async () => {
+      if (user) {
+        try {
+          const cartDoc = await getDoc(doc(db, 'carts', user.uid));
+          if (cartDoc.exists()) {
+            const cloudItems = cartDoc.data().items || [];
+            if (cloudItems.length > 0) {
+              setCart(cloudItems);
+            } else if (cart.length > 0) {
+              await setDoc(doc(db, 'carts', user.uid), { items: cart });
+            }
+          } else if (cart.length > 0) {
+            await setDoc(doc(db, 'carts', user.uid), { items: cart });
+          }
+        } catch (error) {
+          console.error('Failed to sync cart:', error);
+        }
+      }
+    };
+    syncCart();
+  }, [user]);
+
+  // Save to localStorage and Firestore on changes
   useEffect(() => {
     localStorage.setItem('crispy_cart', JSON.stringify(cart));
-  }, [cart]);
+    
+    const updateCloudCart = async () => {
+      if (user) {
+        try {
+          await setDoc(doc(db, 'carts', user.uid), { items: cart });
+        } catch (error) {
+          console.error('Failed to sync cart to cloud:', error);
+        }
+      }
+    };
+    
+    const timeoutId = setTimeout(updateCloudCart, 1000); // Debounce sync
+    return () => clearTimeout(timeoutId);
+  }, [cart, user]);
 
   const addToCart = (product: any) => {
     setCart(prev => {

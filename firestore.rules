@@ -55,5 +55,9 @@ service cloud.firestore {
       allow create: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
       allow update: if isOwner(userId) || isAdmin();
     }
+
+    match /carts/{userId} {
+      allow read, write: if isOwner(userId);
+    }
   }
 }

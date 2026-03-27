@@ -28,7 +28,7 @@
         },
         "status": {
           "type": "string",
-          "enum": ["pending", "confirmed", "delivering", "delivered", "cancelled"],
+          "enum": ["pending", "preparing", "on-way", "delivered", "cancelled"],
           "description": "The current status of the order."
         },
         "createdAt": {
@@ -57,9 +57,18 @@
           "type": "string",
           "description": "The full name of the user."
         },
+        "email": {
+          "type": "string",
+          "description": "The email address of the user."
+        },
         "phone": {
           "type": "string",
-          "description": "The phone number of the user (used as unique ID)."
+          "description": "The phone number of the user."
+        },
+        "role": {
+          "type": "string",
+          "enum": ["user", "admin"],
+          "description": "The role of the user."
         },
         "createdAt": {
           "type": "string",
@@ -67,7 +76,18 @@
           "description": "The time the user was registered."
         }
       },
-      "required": ["name", "phone", "createdAt"]
+      "required": ["name", "role", "createdAt"]
+    },
+    "Cart": {
+      "title": "Cart",
+      "description": "User shopping cart items",
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": { "type": "object" }
+        }
+      }
     }
   },
   "firestore": {
@@ -75,9 +95,13 @@
       "schema": "Order",
       "description": "Collection of customer orders."
     },
-    "/users/{phone}": {
+    "/users/{userId}": {
       "schema": "User",
-      "description": "Collection of registered users, keyed by phone number."
+      "description": "Collection of registered users."
+    },
+    "/carts/{userId}": {
+      "schema": "Cart",
+      "description": "User shopping carts."
     }
   }
 }

@@ -1,18 +1,36 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { auth, onAuthStateChanged, User, loginAnonymously, logout, db, doc, getDoc, setDoc, serverTimestamp, query, collection, where, getDocs } from '../firebase';
+import { 
+  auth, 
+  onAuthStateChanged, 
+  logout, 
+  db, 
+  doc, 
+  getDoc, 
+  setDoc, 
+  serverTimestamp, 
+  signupWithEmail, 
+  loginWithEmail, 
+  updateProfile,
+  loginAnonymously
+} from '../firebase';
 
 interface AppUser {
   uid: string;
   name: string;
-  phone: string;
+  email: string;
+  phone?: string;
+  role: 'user' | 'admin';
   createdAt?: any;
 }
 
 interface AuthContextType {
   user: AppUser | null;
   loading: boolean;
+  signup: (email: string, pass: string, name: string, phone: string) => Promise<void>;
+  login: (email: string, pass: string) => Promise<void>;
   loginWithPhone: (phone: string, name: string) => Promise<void>;
   logout: () => Promise<void>;
+  isAdmin: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,64 +47,80 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (userDoc.exists()) {
           setUser({ uid: firebaseUser.uid, ...userDoc.data() } as AppUser);
         } else {
-          // Check if user exists by phone in localStorage (for session persistence)
-          const storedUser = localStorage.getItem('crispy_user');
-          if (storedUser) {
-            const parsed = JSON.parse(storedUser);
-            // If we have a stored user but no firestore doc for this UID, 
-            // it might be a new anonymous session. We should probably re-link or just create.
-            // For simplicity in this demo, we'll just set the user from localStorage if it matches.
-            setUser(parsed);
-          } else {
-            setUser(null);
-          }
+          // Fallback for anonymous or social login without profile
+          setUser({
+            uid: firebaseUser.uid,
+            name: firebaseUser.displayName || 'Guest',
+            email: firebaseUser.email || '',
+            role: 'user'
+          });
         }
       } else {
         setUser(null);
-        localStorage.removeItem('crispy_user');
       }
       setLoading(false);
     });
     return () => unsubscribe();
   }, []);
 
-  const loginWithPhone = async (phone: string, name: string) => {
+  const signup = async (email: string, pass: string, name: string, phone: string) => {
     try {
-      // 1. Sign in anonymously to get a UID
-      const { user: firebaseUser } = await loginAnonymously();
+      const { user: firebaseUser } = await signupWithEmail(email, pass);
+      await updateProfile(firebaseUser, { displayName: name });
       
-      // 2. Check if user already exists with this phone
-      const q = query(collection(db, 'users'), where('phone', '==', phone));
-      const querySnapshot = await getDocs(q);
-      
-      let userData: AppUser;
-      
-      if (!querySnapshot.empty) {
-        // User exists, use their data but update UID if necessary (or just use existing)
-        const existingDoc = querySnapshot.docs[0];
-        userData = { uid: firebaseUser.uid, ...existingDoc.data() } as AppUser;
-        // Update the document to the new UID if we want to "transfer" it, 
-        // but for a simple demo, we'll just create a new one or use the existing phone as key.
-        // Actually, let's use the phone as the document ID for simplicity in "phone login".
-      } else {
-        // New user
-        userData = {
-          uid: firebaseUser.uid,
-          name,
-          phone,
-          createdAt: serverTimestamp()
-        };
-      }
+      const userData: AppUser = {
+        uid: firebaseUser.uid,
+        name,
+        email,
+        phone,
+        role: 'user',
+        createdAt: serverTimestamp()
+      };
 
-      // Store in Firestore using UID as key (better for rules)
       await setDoc(doc(db, 'users', firebaseUser.uid), {
         name: userData.name,
+        email: userData.email,
         phone: userData.phone,
-        createdAt: userData.createdAt || serverTimestamp()
+        role: userData.role,
+        createdAt: userData.createdAt
       });
 
       setUser(userData);
-      localStorage.setItem('crispy_user', JSON.stringify(userData));
+    } catch (error) {
+      console.error('Signup failed:', error);
+      throw error;
+    }
+  };
+
+  const login = async (email: string, pass: string) => {
+    try {
+      await loginWithEmail(email, pass);
+    } catch (error) {
+      console.error('Login failed:', error);
+      throw error;
+    }
+  };
+
+  const loginWithPhone = async (phone: string, name: string) => {
+    try {
+      const { user: firebaseUser } = await loginAnonymously();
+      const userData: AppUser = {
+        uid: firebaseUser.uid,
+        name,
+        email: '',
+        phone,
+        role: 'user',
+        createdAt: serverTimestamp()
+      };
+
+      await setDoc(doc(db, 'users', firebaseUser.uid), {
+        name: userData.name,
+        phone: userData.phone,
+        role: userData.role,
+        createdAt: userData.createdAt
+      });
+
+      setUser(userData);
     } catch (error) {
       console.error('Phone login failed:', error);
       throw error;
@@ -97,15 +131,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       await logout();
       setUser(null);
-      localStorage.removeItem('crispy_user');
     } catch (error) {
       console.error('Logout failed:', error);
       throw error;
     }
   };
 
+  const isAdmin = user?.role === 'admin';
+
   return (
-    <AuthContext.Provider value={{ user, loading, loginWithPhone, logout: handleLogout }}>
+    <AuthContext.Provider value={{ user, loading, signup, login, loginWithPhone, logout: handleLogout, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );
