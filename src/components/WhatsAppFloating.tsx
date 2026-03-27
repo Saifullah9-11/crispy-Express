@@ -3,7 +3,7 @@ import { MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const WhatsAppFloating: React.FC = () => {
-  const phoneNumber = "923001234567"; // Replace with real number
+  const phoneNumber = "923332196598"; // Replace with real number
   const message = encodeURIComponent("Hello, I want to place an order");
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
 
