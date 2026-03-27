@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ShoppingCart, Menu, X, Flame } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { LogIn, LogOut, User as UserIcon } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { itemCount } = useCart();
+  const { user, login, logout } = useAuth();
   const location = useLocation();
 
   useEffect(() => {
@@ -57,10 +60,36 @@ export const Navbar: React.FC = () => {
                 </span>
               )}
             </Link>
+
+            {user ? (
+              <div className="flex items-center gap-4 pl-4 border-l border-white/10">
+                <div className="flex flex-col items-end">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-primary leading-none mb-1">Welcome</span>
+                  <span className="text-xs font-black text-white uppercase tracking-tight truncate max-w-[100px]">{user.displayName?.split(' ')[0]}</span>
+                </div>
+                <button onClick={logout} className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors text-white group" title="Logout">
+                  <LogOut size={18} className="group-hover:text-primary transition-colors" />
+                </button>
+              </div>
+            ) : (
+              <button onClick={login} className="flex items-center gap-2 bg-white/5 hover:bg-white/10 px-5 py-3 rounded-xl transition-all group">
+                <LogIn size={18} className="text-primary" />
+                <span className="text-xs font-black text-white uppercase tracking-widest">Login</span>
+              </button>
+            )}
           </div>
 
           {/* Mobile Toggle */}
           <div className="md:hidden flex items-center gap-4">
+            {user && (
+              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center overflow-hidden border border-primary/30">
+                {user.photoURL ? (
+                  <img src={user.photoURL} alt={user.displayName || ''} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                ) : (
+                  <UserIcon className="text-primary" size={20} />
+                )}
+              </div>
+            )}
             <Link to="/checkout" className="relative">
               <ShoppingCart className="text-white" size={24} />
               {itemCount > 0 && (
@@ -96,6 +125,22 @@ export const Navbar: React.FC = () => {
                   {link.name}
                 </Link>
               ))}
+              <div className="h-px bg-white/10 my-2"></div>
+              {user ? (
+                <button 
+                  onClick={() => { logout(); setIsOpen(false); }}
+                  className="flex items-center justify-center gap-3 text-xl font-black uppercase tracking-widest text-primary"
+                >
+                  <LogOut size={24} /> Logout
+                </button>
+              ) : (
+                <button 
+                  onClick={() => { login(); setIsOpen(false); }}
+                  className="flex items-center justify-center gap-3 text-xl font-black uppercase tracking-widest text-primary"
+                >
+                  <LogIn size={24} /> Login
+                </button>
+              )}
             </div>
           </motion.div>
         )}

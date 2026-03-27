@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { CartProvider } from './context/CartContext';
+import { AuthProvider } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { Home } from './pages/Home';
@@ -12,8 +13,9 @@ import { Checkout } from './pages/Checkout';
 const App: React.FC = () => {
   return (
     <HelmetProvider>
-      <CartProvider>
-        <Router>
+      <AuthProvider>
+        <CartProvider>
+          <Router>
           <div className="flex flex-col min-h-screen">
             <Navbar />
             <main className="flex-grow">
@@ -28,7 +30,8 @@ const App: React.FC = () => {
           </div>
         </Router>
       </CartProvider>
-    </HelmetProvider>
+    </AuthProvider>
+  </HelmetProvider>
   );
 };
 

@@ -1,20 +1,98 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import { db, collection, addDoc, serverTimestamp, handleFirestoreError, OperationType } from '../firebase';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SEO } from '../components/SEO';
-import { Trash2, Plus, Minus, ArrowRight, ShoppingBag, CreditCard, Truck, MapPin } from 'lucide-react';
+import { Trash2, Plus, Minus, ArrowRight, ShoppingBag, CreditCard, Truck, MapPin, LogIn, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Checkout: React.FC = () => {
   const { cart, total, updateQuantity, removeFromCart, clearCart } = useCart();
+  const { user, login, loading: authLoading } = useAuth();
   const [step, setStep] = useState(1);
   const [isOrdered, setIsOrdered] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleOrder = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsOrdered(true);
-    clearCart();
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    address: ''
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
+
+  const handleOrder = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const orderData = {
+        userId: user.uid,
+        items: cart.map(item => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity
+        })),
+        total,
+        status: 'pending',
+        createdAt: serverTimestamp(),
+        customerInfo: {
+          ...formData,
+          email: user.email || ''
+        }
+      };
+
+      await addDoc(collection(db, 'orders'), orderData);
+      setIsOrdered(true);
+      clearCart();
+    } catch (err) {
+      console.error('Order failed:', err);
+      try {
+        handleFirestoreError(err, OperationType.CREATE, 'orders');
+      } catch (firestoreErr: any) {
+        setError('Failed to place order. Please try again.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-paper flex items-center justify-center">
+        <Loader2 className="text-primary animate-spin" size={48} />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-paper flex items-center justify-center pt-20 pb-20 px-4">
+        <SEO title="Login Required" />
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-md w-full bg-white p-12 rounded-[3rem] shadow-2xl text-center border border-gray-100"
+        >
+          <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8">
+            <LogIn className="text-primary" size={48} />
+          </div>
+          <h1 className="text-4xl font-display font-black italic mb-4 uppercase tracking-tighter">LOGIN <span className="text-primary">REQUIRED</span></h1>
+          <p className="text-gray-500 mb-10 leading-relaxed">Please login with your Google account to complete your order and track your delivery.</p>
+          <button onClick={login} className="btn-primary w-full">Login with Google <ArrowRight size={20} /></button>
+        </motion.div>
+      </div>
+    );
+  }
 
   if (isOrdered) {
     return (
@@ -83,6 +161,12 @@ export const Checkout: React.FC = () => {
             </div>
 
             <form onSubmit={handleOrder} className="space-y-12">
+              {error && (
+                <div className="bg-red-50 text-red-600 p-4 rounded-2xl font-bold text-sm">
+                  {error}
+                </div>
+              )}
+
               {step === 1 && (
                 <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8">
                   <div className="flex items-center gap-4 mb-8">
@@ -90,10 +174,34 @@ export const Checkout: React.FC = () => {
                     <h2 className="text-3xl font-display font-black italic uppercase">DELIVERY <span className="text-primary">DETAILS</span></h2>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <input type="text" placeholder="Full Name" required className="input-field" />
-                    <input type="tel" placeholder="Phone Number" required className="input-field" />
+                    <input 
+                      type="text" 
+                      name="name"
+                      placeholder="Full Name" 
+                      required 
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      className="input-field" 
+                    />
+                    <input 
+                      type="tel" 
+                      name="phone"
+                      placeholder="Phone Number" 
+                      required 
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className="input-field" 
+                    />
                     <div className="md:col-span-2">
-                      <textarea placeholder="Delivery Address" required rows={4} className="input-field resize-none"></textarea>
+                      <textarea 
+                        name="address"
+                        placeholder="Delivery Address" 
+                        required 
+                        rows={4} 
+                        value={formData.address}
+                        onChange={handleInputChange}
+                        className="input-field resize-none"
+                      ></textarea>
                     </div>
                   </div>
                   <button type="button" onClick={() => setStep(2)} className="btn-primary w-full md:w-auto">Next Step <ArrowRight size={20} /></button>
@@ -107,11 +215,11 @@ export const Checkout: React.FC = () => {
                     <h2 className="text-3xl font-display font-black italic uppercase">PAYMENT <span className="text-primary">METHOD</span></h2>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <button type="button" className="p-8 rounded-[2rem] border-2 border-primary bg-primary/5 flex flex-col items-center gap-4 transition-all">
+                    <button type="button" className="p-8 rounded-[2rem] border-2 border-primary bg-primary/5 flex flex-col items-center gap-4 transition-all text-left">
                       <Truck className="text-primary" size={32} />
                       <span className="font-black uppercase tracking-widest text-xs">Cash on Delivery</span>
                     </button>
-                    <button type="button" className="p-8 rounded-[2rem] border-2 border-gray-100 bg-white flex flex-col items-center gap-4 opacity-50 cursor-not-allowed">
+                    <button type="button" className="p-8 rounded-[2rem] border-2 border-gray-100 bg-white flex flex-col items-center gap-4 opacity-50 cursor-not-allowed text-left">
                       <CreditCard className="text-gray-300" size={32} />
                       <span className="font-black uppercase tracking-widest text-xs text-gray-300">Online Payment (Coming Soon)</span>
                     </button>
@@ -146,7 +254,17 @@ export const Checkout: React.FC = () => {
                   </div>
                   <div className="flex gap-4">
                     <button type="button" onClick={() => setStep(2)} className="btn-secondary flex-1 md:flex-none">Back</button>
-                    <button type="submit" className="btn-primary flex-1 md:flex-none">Place Order <ArrowRight size={20} /></button>
+                    <button 
+                      type="submit" 
+                      disabled={isSubmitting}
+                      className="btn-primary flex-1 md:flex-none disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isSubmitting ? (
+                        <div className="flex items-center gap-2">Processing... <Loader2 className="animate-spin" size={20} /></div>
+                      ) : (
+                        <div className="flex items-center gap-2">Place Order <ArrowRight size={20} /></div>
+                      )}
+                    </button>
                   </div>
                 </motion.div>
               )}
