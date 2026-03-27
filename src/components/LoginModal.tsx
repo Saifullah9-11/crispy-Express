@@ -86,6 +86,52 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               </p>
             </div>
 
+            {/* Tabs */}
+            <div className="flex border-b border-gray-100">
+              <button
+                onClick={() => setMode('login')}
+                className={`flex-1 py-4 text-[10px] font-black uppercase tracking-widest transition-all relative ${
+                  mode === 'login' ? 'text-primary' : 'text-gray-400 hover:text-gray-600'
+                }`}
+              >
+                Login
+                {mode === 'login' && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute bottom-0 left-0 right-0 h-1 bg-primary"
+                  />
+                )}
+              </button>
+              <button
+                onClick={() => setMode('signup')}
+                className={`flex-1 py-4 text-[10px] font-black uppercase tracking-widest transition-all relative ${
+                  mode === 'signup' ? 'text-primary' : 'text-gray-400 hover:text-gray-600'
+                }`}
+              >
+                Sign Up
+                {mode === 'signup' && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute bottom-0 left-0 right-0 h-1 bg-primary"
+                  />
+                )}
+              </button>
+              <button
+                onClick={() => setMode('phone')}
+                className={`flex-1 py-4 text-[10px] font-black uppercase tracking-widest transition-all relative ${
+                  mode === 'phone' ? 'text-primary' : 'text-gray-400 hover:text-gray-600'
+                }`}
+              >
+                Phone
+                {mode === 'phone' && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute bottom-0 left-0 right-0 h-1 bg-primary"
+                  />
+                )}
+              </button>
+            </div>
+
             {/* Form */}
             <form onSubmit={handleSubmit} className="p-8 md:p-10">
               {error && (
@@ -186,24 +232,15 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                 )}
               </button>
 
-              <div className="flex flex-col gap-3 mt-6">
+              <div className="flex flex-col gap-3 mt-6 text-center">
                 {mode === 'login' ? (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => setMode('signup')}
-                      className="text-[10px] text-gray-400 font-black uppercase tracking-widest hover:text-primary transition-colors"
-                    >
-                      Don't have an account? <span className="text-primary underline">Sign Up</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setMode('phone')}
-                      className="text-[10px] text-gray-400 font-black uppercase tracking-widest hover:text-gray-600 transition-colors"
-                    >
-                      Or login with phone number
-                    </button>
-                  </>
+                  <button
+                    type="button"
+                    onClick={() => setMode('signup')}
+                    className="text-[10px] text-gray-400 font-black uppercase tracking-widest hover:text-primary transition-colors"
+                  >
+                    Don't have an account? <span className="text-primary underline">Sign Up</span>
+                  </button>
                 ) : mode === 'signup' ? (
                   <button
                     type="button"
