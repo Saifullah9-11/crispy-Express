@@ -11,7 +11,9 @@ import {
   signupWithEmail, 
   loginWithEmail, 
   updateProfile,
-  loginAnonymously
+  loginAnonymously,
+  loginWithGoogle as authLoginWithGoogle,
+  checkAuthConnectivity
 } from '../firebase';
 
 interface AppUser {
@@ -29,7 +31,9 @@ interface AuthContextType {
   signup: (email: string, pass: string, name: string, phone: string) => Promise<void>;
   login: (email: string, pass: string) => Promise<void>;
   loginWithPhone: (phone: string, name: string) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
+  checkConnectivity: () => Promise<boolean>;
   isAdmin: boolean;
 }
 
@@ -40,6 +44,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const checkConn = async () => {
+      const isReachable = await checkAuthConnectivity();
+      console.log('Firebase Auth Connectivity:', isReachable ? 'OK' : 'BLOCKED');
+    };
+    checkConn();
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         // Fetch user data from Firestore
@@ -95,8 +105,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, pass: string) => {
     try {
       await loginWithEmail(email, pass);
-    } catch (error) {
-      console.error('Login failed:', error);
+    } catch (error: any) {
+      console.error('Login failed detail:', error);
+      if (error.code === 'auth/network-request-failed') {
+        throw new Error('Network error: Please check your internet connection or Firebase settings.');
+      }
       throw error;
     }
   };
@@ -127,6 +140,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const loginWithGoogle = async () => {
+    try {
+      const { user: firebaseUser } = await authLoginWithGoogle();
+      // Check if user exists in Firestore
+      const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
+      if (!userDoc.exists()) {
+        const userData: AppUser = {
+          uid: firebaseUser.uid,
+          name: firebaseUser.displayName || 'Guest',
+          email: firebaseUser.email || '',
+          role: 'user',
+          createdAt: serverTimestamp()
+        };
+        await setDoc(doc(db, 'users', firebaseUser.uid), userData);
+        setUser(userData);
+      } else {
+        setUser({ uid: firebaseUser.uid, ...userDoc.data() } as AppUser);
+      }
+    } catch (error) {
+      console.error('Google login failed:', error);
+      throw error;
+    }
+  };
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -140,7 +177,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const isAdmin = user?.role === 'admin';
 
   return (
-    <AuthContext.Provider value={{ user, loading, signup, login, loginWithPhone, logout: handleLogout, isAdmin }}>
+    <AuthContext.Provider value={{ user, loading, signup, login, loginWithPhone, loginWithGoogle, logout: handleLogout, checkConnectivity: checkAuthConnectivity, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );

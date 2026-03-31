@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { db, collection, addDoc, serverTimestamp, handleFirestoreError, OperationType } from '../firebase';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SEO } from '../components/SEO';
-import { Trash2, Plus, Minus, ArrowRight, ShoppingBag, CreditCard, Truck, MapPin, LogIn, Loader2 } from 'lucide-react';
+import { Trash2, Plus, Minus, ArrowRight, ShoppingBag, CreditCard, Truck, MapPin, LogIn, Loader2, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Checkout: React.FC = () => {
@@ -18,7 +18,8 @@ export const Checkout: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
-    address: ''
+    address: '',
+    deliveryType: 'delivery'
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -43,10 +44,13 @@ export const Checkout: React.FC = () => {
           quantity: item.quantity
         })),
         total,
+        deliveryType: formData.deliveryType,
         status: 'pending',
         createdAt: serverTimestamp(),
         customerInfo: {
-          ...formData,
+          name: formData.name,
+          phone: formData.phone,
+          address: formData.deliveryType === 'delivery' ? formData.address : 'Pickup',
           email: user.email || ''
         }
       };
@@ -57,9 +61,10 @@ export const Checkout: React.FC = () => {
       const itemsList = cart.map(item => `• ${item.name} x${item.quantity} (Rs. ${item.price * item.quantity})`).join('\n');
       const whatsappMsg = `*CRISPY EXPRESS - NEW ORDER*\n\n` +
         `*Order ID:* ${docRef.id}\n` +
+        `*Type:* ${formData.deliveryType.toUpperCase()}\n` +
         `*Customer:* ${formData.name}\n` +
         `*Phone:* ${formData.phone}\n` +
-        `*Address:* ${formData.address}\n\n` +
+        (formData.deliveryType === 'delivery' ? `*Address:* ${formData.address}\n\n` : `\n`) +
         `*Items:*\n${itemsList}\n\n` +
         `*Total Amount:* Rs. ${total}\n` +
         `*Payment:* Cash on Delivery\n\n` +
@@ -125,7 +130,7 @@ export const Checkout: React.FC = () => {
           <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8">
             <Truck className="text-primary" size={48} />
           </div>
-          <h1 className="text-4xl font-display font-black italic mb-4 uppercase tracking-tighter">ORDER <span className="text-primary">PLACED!</span></h1>
+          <h1 className="text-4xl font-display font-black italic mb-4 uppercase tracking-tighter">ORDER <span className="text-primary">PLACED SUCCESSFULLY!</span></h1>
           <p className="text-gray-500 mb-10 leading-relaxed">Your hot and crispy meal is being prepared and will be at your doorstep in 30 minutes. Get ready for the crunch!</p>
           <Link to="/" className="btn-primary w-full">Back to Home <ArrowRight size={20} /></Link>
         </motion.div>
@@ -190,8 +195,33 @@ export const Checkout: React.FC = () => {
                 <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8">
                   <div className="flex items-center gap-4 mb-8">
                     <MapPin className="text-primary" size={32} />
-                    <h2 className="text-3xl font-display font-black italic uppercase">DELIVERY <span className="text-primary">DETAILS</span></h2>
+                    <h2 className="text-3xl font-display font-black italic uppercase">ORDER <span className="text-primary">TYPE</span></h2>
                   </div>
+
+                  <div className="flex gap-4 mb-8">
+                    <button 
+                      type="button" 
+                      onClick={() => setFormData(prev => ({ ...prev, deliveryType: 'delivery' }))}
+                      className={`flex-1 p-6 rounded-[2rem] border-2 font-black uppercase tracking-widest text-xs transition-all flex flex-col items-center gap-3 ${formData.deliveryType === 'delivery' ? 'border-primary bg-primary/5 text-primary shadow-xl shadow-primary/10' : 'border-gray-100 bg-white text-gray-400'}`}
+                    >
+                      <Truck size={24} />
+                      Delivery
+                    </button>
+                    <button 
+                      type="button" 
+                      onClick={() => setFormData(prev => ({ ...prev, deliveryType: 'pickup' }))}
+                      className={`flex-1 p-6 rounded-[2rem] border-2 font-black uppercase tracking-widest text-xs transition-all flex flex-col items-center gap-3 ${formData.deliveryType === 'pickup' ? 'border-primary bg-primary/5 text-primary shadow-xl shadow-primary/10' : 'border-gray-100 bg-white text-gray-400'}`}
+                    >
+                      <ShoppingBag size={24} />
+                      Pickup
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-4 mb-8 pt-4">
+                    <User className="text-primary" size={32} />
+                    <h2 className="text-3xl font-display font-black italic uppercase">CUSTOMER <span className="text-primary">INFO</span></h2>
+                  </div>
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <input 
                       type="text" 
@@ -211,17 +241,19 @@ export const Checkout: React.FC = () => {
                       onChange={handleInputChange}
                       className="input-field" 
                     />
-                    <div className="md:col-span-2">
-                      <textarea 
-                        name="address"
-                        placeholder="Delivery Address" 
-                        required 
-                        rows={4} 
-                        value={formData.address}
-                        onChange={handleInputChange}
-                        className="input-field resize-none"
-                      ></textarea>
-                    </div>
+                    {formData.deliveryType === 'delivery' && (
+                      <div className="md:col-span-2">
+                        <textarea 
+                          name="address"
+                          placeholder="Delivery Address" 
+                          required 
+                          rows={4} 
+                          value={formData.address}
+                          onChange={handleInputChange}
+                          className="input-field resize-none"
+                        ></textarea>
+                      </div>
+                    )}
                   </div>
                   <button type="button" onClick={() => setStep(2)} className="btn-primary w-full md:w-auto">Next Step <ArrowRight size={20} /></button>
                 </motion.div>

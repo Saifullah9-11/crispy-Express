@@ -26,6 +26,7 @@ interface Order {
   items: any[];
   total: number;
   status: 'pending' | 'preparing' | 'on-way' | 'delivered' | 'cancelled';
+  deliveryType?: 'delivery' | 'pickup';
   createdAt: Timestamp;
   customerInfo: {
     name: string;
@@ -203,6 +204,10 @@ const AdminDashboard: React.FC = () => {
                             {getStatusIcon(order.status)}
                             {order.status.replace('-', ' ')}
                           </div>
+                          <div className={`flex items-center gap-2 px-4 py-1.5 rounded-full border text-[10px] font-black uppercase tracking-widest ${order.deliveryType === 'pickup' ? 'bg-orange-50 text-orange-600 border-orange-100' : 'bg-blue-50 text-blue-600 border-blue-100'}`}>
+                            {order.deliveryType === 'pickup' ? <ShoppingBag size={14} /> : <Truck size={14} />}
+                            {order.deliveryType || 'delivery'}
+                          </div>
                           <div className="flex items-center gap-2 text-gray-400 text-[10px] font-black uppercase tracking-widest">
                             <Calendar size={14} />
                             {order.createdAt?.toDate().toLocaleString()}
@@ -260,7 +265,7 @@ const AdminDashboard: React.FC = () => {
                           onClick={() => updateOrderStatus(order.id, 'on-way')}
                           className="w-full py-3 rounded-xl border-2 border-purple-100 text-purple-600 font-black uppercase tracking-widest text-[10px] hover:bg-purple-50 transition-all"
                         >
-                          Out for Delivery
+                          {order.deliveryType === 'delivery' ? 'Out for Delivery' : 'Ready for Pickup'}
                         </button>
                         <button 
                           onClick={() => updateOrderStatus(order.id, 'delivered')}

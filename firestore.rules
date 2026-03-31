@@ -11,6 +11,7 @@ service cloud.firestore {
     //   - userId: string (required) - UID of the user
     //   - items: list (required) - List of order items
     //   - total: number (required) - Total order amount
+    //   - deliveryType: string (required) - Enum: delivery, pickup
     //   - status: string (required) - Enum: pending, confirmed, delivering, delivered, cancelled
     //   - createdAt: timestamp (required) - Time of creation
     //   - customerInfo: map (required) - Name, email, phone, address
@@ -33,10 +34,11 @@ service cloud.firestore {
     }
 
     function isValidOrder(data) {
-      return data.keys().hasAll(['userId', 'items', 'total', 'status', 'createdAt', 'customerInfo']) &&
+      return data.keys().hasAll(['userId', 'items', 'total', 'deliveryType', 'status', 'createdAt', 'customerInfo']) &&
              data.userId is string &&
              data.items is list &&
              data.total is number &&
+             data.deliveryType in ['delivery', 'pickup'] &&
              data.status in ['pending', 'confirmed', 'delivering', 'delivered', 'cancelled'] &&
              data.createdAt is timestamp &&
              data.customerInfo is map &&
@@ -58,6 +60,10 @@ service cloud.firestore {
 
     match /carts/{userId} {
       allow read, write: if isOwner(userId);
+    }
+
+    match /test/connection {
+      allow read: if true;
     }
   }
 }

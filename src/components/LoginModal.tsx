@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Phone, User, Flame, ArrowRight, Loader2, Mail, Lock } from 'lucide-react';
+import { X, Phone, User, Flame, ArrowRight, Loader2, Mail, Lock, Chrome } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 interface LoginModalProps {
@@ -18,7 +18,37 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { login, signup, loginWithPhone } = useAuth();
+  const { login, signup, loginWithPhone, loginWithGoogle, checkConnectivity } = useAuth();
+  const [checking, setChecking] = useState(false);
+
+  const handleTroubleshoot = async () => {
+    setChecking(true);
+    const isReachable = await checkConnectivity();
+    if (isReachable) {
+      setError('Connection test: Firebase Auth is reachable. The issue might be specific to your account or a temporary local glitch. Try refreshing.');
+    } else {
+      setError('Connection test: Firebase Auth is BLOCKED. Please check your ad-blocker, VPN, or network settings.');
+    }
+    setChecking(false);
+  };
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      await loginWithGoogle();
+      onClose();
+    } catch (err: any) {
+      console.error('Google login error:', err);
+      if (err.code === 'auth/network-request-failed') {
+        setError('Network error: Firebase Auth is unreachable. This is often caused by ad-blockers (like uBlock Origin), corporate firewalls, or VPNs. Please disable extensions for this site or try an incognito window.');
+      } else {
+        setError(err.message || 'Google login failed. Please try again.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +71,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
       }
       onClose();
     } catch (err: any) {
-      setError(err.message || 'Authentication failed. Please try again.');
+      console.error('Auth error detail:', err);
+      if (err.code === 'auth/network-request-failed') {
+        setError('Network error: Firebase Auth is unreachable. This is often caused by ad-blockers (like uBlock Origin), corporate firewalls, or VPNs. Please disable extensions for this site or try an incognito window.');
+      } else {
+        setError(err.message || 'Authentication failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -135,8 +170,18 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             {/* Form */}
             <form onSubmit={handleSubmit} className="p-8 md:p-10">
               {error && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 text-[10px] font-bold uppercase tracking-widest rounded-xl text-center">
-                  {error}
+                <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 text-[10px] font-bold uppercase tracking-widest rounded-xl text-center flex flex-col gap-2">
+                  <span>{error}</span>
+                  {error.includes('Network error') && (
+                    <button 
+                      type="button"
+                      onClick={handleTroubleshoot}
+                      disabled={checking}
+                      className="text-primary underline hover:text-primary/80 transition-colors"
+                    >
+                      {checking ? 'Checking...' : 'Check Connection Status'}
+                    </button>
+                  )}
                 </div>
               )}
 
@@ -230,6 +275,25 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                     {mode === 'login' ? 'Login Now' : mode === 'signup' ? 'Create Account' : 'Start Ordering'} <ArrowRight size={20} />
                   </>
                 )}
+              </button>
+
+              <div className="relative my-8">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-100"></div>
+                </div>
+                <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
+                  <span className="bg-white px-4 text-gray-400">Or continue with</span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleGoogleLogin}
+                disabled={loading}
+                className="w-full bg-white border-2 border-gray-100 text-charcoal py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-gray-50 active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+              >
+                <Chrome size={20} className="text-primary" />
+                Google Account
               </button>
 
               <div className="flex flex-col gap-3 mt-6 text-center">

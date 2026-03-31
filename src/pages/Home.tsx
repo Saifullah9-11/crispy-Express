@@ -27,7 +27,7 @@ export const Home: React.FC = () => {
 
   return (
     <div className="overflow-hidden bg-white">
-      <SEO title="Hot. Crispy. Delivered Fast." />
+      <SEO title="Crispy Fried Chicken Hot & Spicy" />
       <WhatsAppFloating />
 
       {/* HERO SECTION */}

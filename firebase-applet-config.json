@@ -1,9 +1,10 @@
 {
-  "apiKey": "AIzaSyDS_M7FD3SGnbCKEu5owCnJqKhfVUqzfSY",
-  "authDomain": "crispy-express.firebaseapp.com",
-  "projectId": "crispy-express",
-  "storageBucket": "crispy-express.firebasestorage.app",
-  "messagingSenderId": "1026240176796",
-  "appId": "1:1026240176796:web:b6cd6a2f610daf1beb8359",
-  "measurementId": "G-Z9FJPN9EKB"
+  "projectId": "gen-lang-client-0600810943",
+  "appId": "1:728107509004:web:f044d7a12c3590a3c85529",
+  "apiKey": "AIzaSyD8ELtcOJCMLCcAfgaRuTDUuyePFQWbRrQ",
+  "authDomain": "gen-lang-client-0600810943.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-481769ad-8c1a-429d-8c4a-d1653f959540",
+  "storageBucket": "gen-lang-client-0600810943.firebasestorage.app",
+  "messagingSenderId": "728107509004",
+  "measurementId": ""
 }

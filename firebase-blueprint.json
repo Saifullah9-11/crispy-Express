@@ -26,6 +26,11 @@
           "type": "number",
           "description": "The total amount of the order."
         },
+        "deliveryType": {
+          "type": "string",
+          "enum": ["delivery", "pickup"],
+          "description": "Whether the order is for delivery or pickup."
+        },
         "status": {
           "type": "string",
           "enum": ["pending", "preparing", "on-way", "delivered", "cancelled"],
@@ -46,7 +51,7 @@
           }
         }
       },
-      "required": ["userId", "items", "total", "status", "createdAt", "customerInfo"]
+      "required": ["userId", "items", "total", "deliveryType", "status", "createdAt", "customerInfo"]
     },
     "User": {
       "title": "User",

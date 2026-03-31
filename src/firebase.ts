@@ -1,6 +1,8 @@
 import { initializeApp } from 'firebase/app';
 import { 
-  getAuth, 
+  initializeAuth,
+  browserLocalPersistence,
+  browserPopupRedirectResolver,
   GoogleAuthProvider, 
   signInWithPopup, 
   signOut, 
@@ -33,12 +35,46 @@ import {
 // Import the Firebase configuration from the auto-generated file
 import firebaseConfig from '../firebase-applet-config.json';
 
+if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+  console.error('Firebase configuration is missing required fields!');
+}
+
 // Initialize Firebase SDK
-const app = initializeApp(firebaseConfig);
+console.log('Firebase Config (Redacted):', { ...firebaseConfig, apiKey: 'REDACTED' });
+let app;
+try {
+  app = initializeApp(firebaseConfig);
+} catch (e) {
+  console.error('Firebase initialization failed:', e);
+  // Fallback or re-throw
+  throw e;
+}
 // @ts-ignore - firestoreDatabaseId might be missing in some configs
 export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId || '(default)');
-export const auth = getAuth(app);
+
+// Use initializeAuth for more explicit configuration
+export const auth = initializeAuth(app, {
+  persistence: browserLocalPersistence,
+  popupRedirectResolver: browserPopupRedirectResolver,
+});
+
 export const googleProvider = new GoogleAuthProvider();
+
+// Check if Firebase Auth is reachable
+export const checkAuthConnectivity = async () => {
+  try {
+    // We try to hit the public endpoint. A 400 is fine, it means we reached it.
+    // A network error (catch block) means it's blocked.
+    const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${firebaseConfig.apiKey}`, {
+      method: 'POST',
+      body: JSON.stringify({ idToken: 'test' })
+    });
+    return res.status !== 0;
+  } catch (e) {
+    console.error('Auth connectivity check failed:', e);
+    return false;
+  }
+};
 
 // Auth functions
 export const loginWithGoogle = () => signInWithPopup(auth, googleProvider);
@@ -103,12 +139,14 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
 // Validate Connection to Firestore
 async function testConnection() {
   try {
-    await getDocFromServer(doc(db, 'test', 'connection'));
+    console.log('Testing Firestore connection...');
+    const connDoc = await getDocFromServer(doc(db, 'test', 'connection'));
+    console.log('Firestore connection successful. Data:', connDoc.data());
   } catch (error) {
-    if(error instanceof Error && error.message.includes('the client is offline')) {
-      console.error("Please check your Firebase configuration. ");
+    console.error('Firestore connection test failed:', error);
+    if(error instanceof Error && (error.message.includes('the client is offline') || error.message.includes('Missing or insufficient permissions'))) {
+      console.error("Please check your Firebase configuration or rules. ");
     }
-    // Skip logging for other errors, as this is simply a connection test.
   }
 }
 testConnection();
