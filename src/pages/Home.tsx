@@ -35,7 +35,7 @@ export const Home: React.FC = () => {
         {/* Full-screen background image */}
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?auto=format&fit=crop&w=1920&q=80" 
+            src="https://img.freepik.com/free-photo/crispy-fried-chicken-with-seasoning_84443-82013.jpg?semt=ais_hybrid&w=740&q=80" 
             alt="Crispy Fried Chicken" 
             className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
@@ -54,9 +54,9 @@ export const Home: React.FC = () => {
               <Flame size={14} fill="currentColor" />
               <span>Now Serving Hot & Fresh</span>
             </div>
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-display font-black text-white mb-6 uppercase italic leading-[0.85] tracking-tighter">
-              Crispy Fried Chicken<br />
-              <span className="text-primary drop-shadow-[0_10px_10px_rgba(228,0,43,0.3)]">Hot & Spicy</span>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-black mb-6 uppercase italic leading-[0.85] tracking-tighter text-white">
+              Love at First Bite<br />
+              <span className="text-2xl md:text-3xl lg:text-4xl drop-shadow-[0_10px_10px_rgba(228,0,43,0.5)]">in the name of Spice</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-200 mb-12 max-w-2xl mx-auto font-medium leading-relaxed uppercase tracking-widest text-xs opacity-80">
               Freshly prepared meals, premium ingredients, and lightning-fast delivery, because you deserve better.
