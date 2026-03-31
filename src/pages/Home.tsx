@@ -55,11 +55,11 @@ export const Home: React.FC = () => {
               <span>Now Serving Hot & Fresh</span>
             </div>
             <h1 className="text-6xl md:text-8xl lg:text-9xl font-display font-black text-white mb-6 uppercase italic leading-[0.85] tracking-tighter">
-              Hot. Crispy.<br />
-              <span className="text-primary drop-shadow-[0_10px_10px_rgba(228,0,43,0.3)]">Delivered Fast.</span>
+              Crispy Fried Chicken<br />
+              <span className="text-primary drop-shadow-[0_10px_10px_rgba(228,0,43,0.3)]">Hot & Spicy</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-200 mb-12 max-w-2xl mx-auto font-medium leading-relaxed uppercase tracking-widest text-xs opacity-80">
-              Freshly made chicken, juicy burgers, and irresistible combos at your doorstep in under 30 minutes.
+              Freshly prepared meals, premium ingredients, and lightning-fast delivery, because you deserve better.
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link to="/menu" className="btn-primary text-lg group">
